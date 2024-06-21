@@ -47,9 +47,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public User(String username, String password, Role role){
-        this.username = username;
-        this.password = password;
+    public User(String email, Squad squad, String office, Role role){
+        this.email = email;
+        this.squad = squad;
+        this.office = office;
         this.role = role;
     }
 
@@ -73,7 +74,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override
