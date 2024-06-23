@@ -1,22 +1,17 @@
 services:
   postgres:
-    container_name: postgres
-    image: 'postgres:latest'
+    image: postgres
     environment:
-      - 'POSTGRES_DB=superpatos'
-      - 'POSTGRES_USER=postgres'
-      - 'POSTGRES_PASSWORD=a'
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: passwd
     ports:
-      - '5432:5432'
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+      - '5432'
+    restart: always
 
   backend:
-    container_name: backend
     build: .
+    depends_on:
+      - postgres
     ports:
-      - '8080:8080'
-    restart: 'always'
-
-volumes:
-  pgdata: {}
+      - '8080'
+    restart: always
