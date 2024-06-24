@@ -1,8 +1,12 @@
 package com.api.superpatos.controller;
 
 import com.api.superpatos.dto.CreateDTO;
+import com.api.superpatos.dto.FindByUserDTO;
 import com.api.superpatos.dto.UpdateNewUserDTO;
-import com.api.superpatos.dto.UpdateUserByAdmin;
+import com.api.superpatos.dto.UpdateUserByAdminDTO;
+import com.api.superpatos.enums.Role;
+import com.api.superpatos.enums.Squad;
+import com.api.superpatos.model.User;
 import com.api.superpatos.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api")
@@ -28,6 +35,13 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<User> findByUser(@PathVariable("id")String id, @RequestBody @Valid FindByUserDTO dto){
+        User user = service.findByUser(id, dto);
+
+        return new ResponseEntity<>(user, user != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    }
+
     @PutMapping(path = "/{id}")
     public ResponseEntity<Void> updateNewUser(@PathVariable("id")String id, @RequestBody @Valid UpdateNewUserDTO dto){
         service.updateNewUser(id, dto);
@@ -35,8 +49,17 @@ public class UserController {
     }
 
     @PutMapping(path = "/auth/{id}")
-    public ResponseEntity<Void> updateUserByAdmin(@PathVariable("id")String id, @RequestBody @Valid UpdateUserByAdmin dto){
+    public ResponseEntity<Void> updateUserByAdmin(@PathVariable("id")String id, @RequestBody @Valid UpdateUserByAdminDTO dto){
         service.updateUserByAdmin(id, dto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = "/auth/{id}")
+    public ResponseEntity<Void> deleteUserByAdmin(@PathVariable("id")String id,
+                                                  @RequestParam String email,
+                                                  @RequestParam Squad squad,
+                                                  @RequestParam Role role){
+        service.deleteUserByAdmin(id, email, squad, role);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

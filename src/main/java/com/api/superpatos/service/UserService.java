@@ -2,7 +2,10 @@ package com.api.superpatos.service;
 
 import com.api.superpatos.dto.CreateDTO;
 import com.api.superpatos.dto.UpdateNewUserDTO;
-import com.api.superpatos.dto.UpdateUserByAdmin;
+import com.api.superpatos.dto.UpdateUserByAdminDTO;
+import com.api.superpatos.dto.FindByUserDTO;
+import com.api.superpatos.enums.Role;
+import com.api.superpatos.enums.Squad;
 import com.api.superpatos.model.User;
 import com.api.superpatos.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +19,7 @@ public class UserService {
     private UserRepository userRepository;
 
     public void createUser(CreateDTO dto){
-        if(dto.email() != null && dto.squad() != null && dto.office() != null && dto.roles() != null){
+        if(notNull(dto.email(), dto.squad(), dto.office(), dto.roles())){
             User entity = new User(dto.email(), dto.squad(), dto.office(), dto.roles());
             userRepository.save(entity);
         }else{
@@ -41,7 +44,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void updateUserByAdmin(String id, UpdateUserByAdmin dto){
+    public void updateUserByAdmin(String id, UpdateUserByAdminDTO dto){
         User user = userRepository.findById(id)
                 .orElseThrow(RuntimeException::new);
 
@@ -60,6 +63,26 @@ public class UserService {
         }
 
         userRepository.save(user);
+    }
+
+    public User findByUser(String id, FindByUserDTO dto){
+        userRepository.findById(id)
+                .orElseThrow(RuntimeException::new);
+
+        if(notNull(dto.email(), dto.squad(), dto.role())){
+            return userRepository.findByUser(dto.email(), dto.squad(), dto.role());
+        }else {
+            throw new RuntimeException("User not found with email, squad and role");
+        }
+    }
+
+    public void deleteUserByAdmin(String id, String email, Squad squad, Role role){
+        userRepository.findById(id)
+                .orElseThrow(RuntimeException::new);
+
+        FindByUserDTO findByUserDTO = new FindByUserDTO(email, squad, role);
+        User user = findByUser(id, findByUserDTO);
+        userRepository.delete(user);
     }
 
     private static  boolean notNull(Object... parameters){
