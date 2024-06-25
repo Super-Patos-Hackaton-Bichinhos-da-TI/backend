@@ -70,7 +70,7 @@ public class UserService {
                 .orElseThrow(RuntimeException::new);
 
         if(notNull(dto.email(), dto.squad(), dto.role())){
-            return userRepository.findByUser(dto.email(), dto.squad(), dto.role());
+            return userRepository.findByEmailAndSquadAndRole(dto.email(), dto.squad(), dto.role());
         }else {
             throw new RuntimeException("User not found with email, squad and role");
         }
