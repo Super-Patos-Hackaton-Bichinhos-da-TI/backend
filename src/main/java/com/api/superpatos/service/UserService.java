@@ -18,10 +18,17 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     public void createUser(CreateDTO dto){
         if(notNull(dto.email(), dto.squad(), dto.office(), dto.roles())){
             User entity = new User(dto.email(), dto.squad(), dto.office(), dto.roles());
             userRepository.save(entity);
+
+            emailService.sendEmailText(entity.getEmail(),
+                    "Novo usuário cadastrado",
+                    "Seja bem vindo ao Bichinhos! \n Para completar o cadastro, acesse o link: \n possívelLink");
         }else{
             throw new IllegalArgumentException("Unable to save the user: one or more fields are null.");
         }
