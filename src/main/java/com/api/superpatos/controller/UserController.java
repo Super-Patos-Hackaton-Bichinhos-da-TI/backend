@@ -5,15 +5,11 @@ import com.api.superpatos.dto.UpdateNewUserDTO;
 import com.api.superpatos.dto.UpdateUserByAdmin;
 import com.api.superpatos.service.UserService;
 import jakarta.validation.Valid;
+import org.hibernate.Remove;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -39,4 +35,12 @@ public class UserController {
         service.updateUserByAdmin(id, dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping(path = "/{id}/add-xp")
+    public ResponseEntity<Void> addXpToUser(@PathVariable("id") String id, @RequestParam int xp)
+    {
+        service.addXpToUser(id, xp);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

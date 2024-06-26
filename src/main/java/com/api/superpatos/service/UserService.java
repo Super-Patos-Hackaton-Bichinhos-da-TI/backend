@@ -62,6 +62,15 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void addXpToUser(String id, int xp)
+    {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.addXp(xp);
+        userRepository.save(user);
+    }
+
     private static  boolean notNull(Object... parameters){
         for(Object paremeter : parameters){
             if(paremeter == null){
