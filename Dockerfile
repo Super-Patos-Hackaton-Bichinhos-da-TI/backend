@@ -3,7 +3,6 @@ FROM maven:3.8.4-openjdk-17-slim AS build
 COPY . /app
 WORKDIR /app
 
-#RUN mvn clean install
 RUN mvn clean package -DskipTests
 
 FROM openjdk:17-jdk-alpine
