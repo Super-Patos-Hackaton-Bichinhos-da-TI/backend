@@ -42,6 +42,7 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Squad squad;
+    
     @Enumerated(EnumType.STRING)
     private Pet pet;
 

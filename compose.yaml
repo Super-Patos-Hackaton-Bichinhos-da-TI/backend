@@ -1,22 +1,23 @@
 services:
-  postgres:
-    container_name: postgres
-    image: 'postgres:latest'
+  app:
+    image: 'docker-spring-boot-postgres:latest'
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - db
+    ports:
+      - '8080'
     environment:
-      - 'POSTGRES_DB=superpatos'
-      - 'POSTGRES_USER=postgres'
-      - 'POSTGRES_PASSWORD=a'
-    ports:
-      - '5432:5432'
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=passwd
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
 
-  backend:
-    container_name: backend
-    build: .
-    ports:
-      - '8080:8080'
-    restart: 'always'
-
-volumes:
-  pgdata: {}
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: passwd
