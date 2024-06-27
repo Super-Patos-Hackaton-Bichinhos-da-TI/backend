@@ -13,11 +13,15 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=passwd
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    restart: always
 
   db:
     image: postgres
     container_name: db
+    ports:
+      - '5432'
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: passwd
+    restart: always
