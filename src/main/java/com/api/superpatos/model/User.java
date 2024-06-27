@@ -37,7 +37,8 @@ public class User implements UserDetails {
     private String password;
     private String biography;
     private String office;
-    private String xp;
+    private int xp = 0;
+    private int level = 1;
 
     @Enumerated(EnumType.STRING)
     private Squad squad;
@@ -96,5 +97,19 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    private int xpToNextLevel() { return this.level * 100;}
+
+    private void levelUp() { this.level++; }
+
+    public void addXp(int amount)
+    {
+        this.xp += amount;
+        while(this.xp >= xpToNextLevel())
+        {
+            this.xp -= xpToNextLevel();
+            levelUp();
+        }
     }
 }
