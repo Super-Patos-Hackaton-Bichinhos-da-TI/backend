@@ -16,6 +16,7 @@ public record CreateChallengeDTO (
     List<Tag> tags,
     Squad squad,
     String link_img,
+    Long xp_reward,
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     Date date

@@ -12,6 +12,9 @@ import com.api.superpatos.model.User;
 import com.api.superpatos.security.TokenService;
 import com.api.superpatos.service.UserService;
 import jakarta.validation.Valid;
+
+import java.util.List;
+
 import org.hibernate.Remove;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,27 +48,35 @@ public class UserController {
     public ResponseEntity<LoginDTO> login(@RequestBody @Valid AuthenticationDTO dto){
 
         var usernamePassword = new UsernamePasswordAuthenticationToken(dto.username(), dto.password());
-        var auth = authenticationManager.authenticate(usernamePassword);
 
-        var token = tokenService.generateToken((User) auth.getPrincipal());
-
-        return new ResponseEntity<>(new LoginDTO(token), HttpStatus.OK);
+        try {
+            var auth = authenticationManager.authenticate(usernamePassword);
+            var token = tokenService.generateToken((User) auth.getPrincipal());
+            return new ResponseEntity<>(new LoginDTO(token), HttpStatus.OK);
+        } catch(Exception e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
-    @PostMapping(path = "/auth/create-user")
+    @PostMapping(path = "/create-user")
     public ResponseEntity<Void> createUser(@RequestBody @Valid CreateDTO create){
         service.createUser(create);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(service.getAllUsers());
+    }
+
+    @GetMapping(path = "/user/{id}")
     public ResponseEntity<User> findByUser(@PathVariable("id")String id, @RequestBody @Valid FindByUserDTO dto){
         User user = service.findByUser(id, dto);
 
         return new ResponseEntity<>(user, user != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping(path = "/{id}")
+    @PutMapping(path = "/user/{id}")
     public ResponseEntity<Void> updateNewUser(@PathVariable("id")String id, @RequestBody @Valid UpdateNewUserDTO dto){
         service.updateNewUser(id, dto);
         return new ResponseEntity<>(HttpStatus.OK);

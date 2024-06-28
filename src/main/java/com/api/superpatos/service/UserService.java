@@ -8,6 +8,9 @@ import com.api.superpatos.enums.Role;
 import com.api.superpatos.enums.Squad;
 import com.api.superpatos.model.User;
 import com.api.superpatos.repository.UserRepository;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,8 +25,12 @@ public class UserService {
     private EmailService emailService;
 
     public void createUser(CreateDTO dto){
-        if(notNull(dto.email(), dto.squad(), dto.office(), dto.roles())){
-            User entity = new User(dto.email(), dto.squad(), dto.office(), dto.roles());
+        if(notNull(dto.email(), dto.password(), dto.squad(), dto.office(), dto.roles())){
+            String encryptedPassword = new BCryptPasswordEncoder().encode(dto.password());
+
+            System.out.println(encryptedPassword);
+
+            User entity = new User(dto.email(), encryptedPassword, dto.squad(), dto.office(), dto.roles());
             userRepository.save(entity);
 
             emailService.sendEmailText(entity.getEmail(),
@@ -81,6 +88,10 @@ public class UserService {
         }else {
             throw new RuntimeException("User not found with email, squad and role");
         }
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     public void deleteUserByAdmin(String id, String email, Squad squad, Role role){

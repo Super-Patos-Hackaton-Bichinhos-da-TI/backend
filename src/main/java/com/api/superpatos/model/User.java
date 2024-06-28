@@ -37,8 +37,8 @@ public class User implements UserDetails {
     private String password;
     private String biography;
     private String office;
-    private int xp = 0;
-    private int level = 1;
+    private Long xp = 0L;
+    private Long level = 1L;
 
     @Enumerated(EnumType.STRING)
     private Squad squad;
@@ -49,8 +49,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public User(String email, Squad squad, String office, Role role){
+    public User(String email, String password, Squad squad, String office, Role role){
         this.email = email;
+        this.password = password;
         this.squad = squad;
         this.office = office;
         this.role = role;
@@ -99,13 +100,14 @@ public class User implements UserDetails {
         return true;
     }
 
-    private int xpToNextLevel() { return this.level * 100;}
+    private Long xpToNextLevel() { return this.level * 100L;}
 
     private void levelUp() { this.level++; }
 
-    public void addXp(int amount)
+    public void addXp(Long amount)
     {
         this.xp += amount;
+
         while(this.xp >= xpToNextLevel())
         {
             this.xp -= xpToNextLevel();
