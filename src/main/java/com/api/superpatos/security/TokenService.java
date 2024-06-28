@@ -22,7 +22,7 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer("super-patos")
-                    .withSubject(user.getUsername())
+                    .withSubject(user.getEmail())
                     .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
         }catch (JWTCreationException exception){
