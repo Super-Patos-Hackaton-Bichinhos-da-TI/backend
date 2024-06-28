@@ -1,10 +1,10 @@
-package com.api.superpatos;
+package com.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SuperpatosApplicationTests {
+class DemoApplicationTests {
 
 	@Test
 	void contextLoads() {

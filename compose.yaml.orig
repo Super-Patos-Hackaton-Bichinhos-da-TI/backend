@@ -7,7 +7,11 @@ services:
     depends_on:
       - db
     ports:
-      - 8081:8080
+<<<<<<< HEAD
+      - '8080'
+=======
+      - 8080:8080
+>>>>>>> authentication-authorization
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
